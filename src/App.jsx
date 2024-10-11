@@ -14,49 +14,96 @@ export default function App() {
     initialTodos
   );
 
+  const [isEdit, setIsEdit] = useState(false);
+  const [name, setName] = useState("고윤정");
+  const [major, setMajor] = useState("창의소프트학부 디자인이노베이션");
+  const [email, setEmail] = useState("jejukyj@naver.com");
+  const [github, setGitHub] = useState("github.com/jejukyj")
+
   function handleAddTodo(title) {
-    todos.push({
-      id: nextId++,
-      title: title,
-      done: false
-    });
+    setTodos([
+      ...todos,
+      {
+        id: todos.length,
+        title: title,
+        done: false,
+      },
+    ]);
   }
 
   function handleChangeTodo(nextTodo) {
-    const todo = todos.find(t =>
-      t.id === nextTodo.id
-    );
-    todo.title = nextTodo.title;
-    todo.done = nextTodo.done;
+    const newTodos = todos.map(todo => {
+      if (todo.id === nextTodo.id) {
+        return nextTodo;
+      } else {
+        return todo;
+      }
+    });
+    setTodos(newTodos);
   }
 
   function handleDeleteTodo(todoId) {
-    const index = todos.findIndex(t =>
-      t.id === todoId
-    );
-    todos.splice(index, 1);
+    let newTodos = todos.filter(p => p.id !== todoId);
+    setTodos(newTodos);
   }
-
 
   return (
     <>
-      <form>
-        <h2>안녕하세요, 프론트엔드 개발자 고윤정<input/>입니다.</h2>
+      <form onSubmit={e => {
+        e.preventDefault();
+        setIsEdit(!isEdit);
+      }}>
+        <h2>안녕하세요, 프론트엔드 개발자 {' '}
+        {isEdit ? (
+              <input
+                value={name}
+                onChange={e => {
+                  setName(e.target.value)
+                }}
+                />
+            ) : (
+              <b>{name}</b>
+            )}
+            입니다.</h2>
         <div className="box">
           <label>
             📎 전공 : {' '}
-            창의소프트학부 디자인이노베이션
-            <input/>
+            {isEdit ? (
+              <input
+                value={major}
+                onChange={e => {
+                  setMajor(e.target.value)
+                }}
+                />
+            ) : (
+              <b>{major}</b>
+            )}
           </label>
           <label>
             📎 이메일 : {' '}
-            jejukyj@naver.com
-            <input/>
+            {isEdit ? (
+              <input
+                value={email}
+                onChange={e => {
+                  setEmail(e.target.value)
+                }}
+                />
+            ) : (
+              <b>{email}</b>
+            )}
           </label>
           <label>
             📎 깃허브 : {' '}
-            github.com/jejukyj
-            <input/>
+            {isEdit ? (
+              <input
+                value={github}
+                onChange={e => {
+                  setGitHub(e.target.value)
+                }}
+                />
+            ) : (
+              <b>{github}</b>
+            )}
           </label>
         </div>
         <div className="profile-edit">
